@@ -1,8 +1,4 @@
----
-title: 数据可视化开放发布
----
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -12,7 +8,7 @@ title: 数据可视化开放发布
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>{{ page.title }}</title>
+    <title>数据可视化开放发布</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +30,7 @@ title: 数据可视化开放发布
   </head>
 
   <body role="document">
-<br>
+<br><br><br><br>
     <!-- Fixed navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
@@ -45,53 +41,54 @@ title: 数据可视化开放发布
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <div class="navbar-brand">{{ page.title }}</div>
+          <div class="navbar-brand">数据可视化开放发布</div>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="about.html">关于</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="#about">关于</a></li>
             <li><a href="DVOPI.html">开放发布倡议</a></li>
 
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-<br><br>
-    <div class="container theme-showcase" role="main">	
-	
-		<table class="table">					
-            <thead>
-              <tr>
-                <th>修改日期</th>
-                <th>作品名称</th>
-                <th>Tag</th>
-                <th>可视化工具</th>
-				<th>设计者</th>
-				<th>首发时间</th>
-              </tr>
-            </thead>
 
-	
-				<tbody>
-				{% for post in site.posts %}
-					<tr>
-						<td>{{ post.date | date_to_string }}</td>
-						<td><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></td>
-						<td>{{ post.tags | array_to_sentence_string }}</td>
-						<td>{{ post.dvtools }}</td>
-						<td><a href="{{ post.author_links }}">{{ post.author }}</a></td>
-						<td>{{ post.releasing_time }}</td>
-					</tr>	
-				{% endfor %}
-				</tbody>			
-          </table>
+    <div class="container theme-showcase" role="main">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>关于</h1><br><br>
+        <p>
+		
+本项目将遵循 <a href="DVOPI.html">DVOPI </a>持续发布原创数据可视化作品，目前已有作品中，表现形式包括：图片、交互图片/图表、视频；作品类型有社交网络类、历史流、物件关系/描述、信息公开等；制作及展示所用到的工具包括：<a href="https://gephi.github.io/">Gephi</a> &nbsp;&nbsp;&nbsp;
+<a href="https://github.com/twbs/bootstrap">GitHub</a> &nbsp;&nbsp;&nbsp;  
+<a href="http://getbootstrap.com/">Bootstrap</a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.bbsoftware.co.uk/">BB FlashBack</a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.convertavitomp4.com/">Convert AVI to MP4</a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.videojs.com/">Video.js</a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.treemap.com/">TreeMap</a>&nbsp;&nbsp;&nbsp;
+<a href="http://echarts.baidu.com/">ECharts</a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.yworks.com/en/products_yed_about.html">yEd</a>
+</p>。
+
+      </div>
 
 
-		  
+
+
+
+      <div class="page-header">
+        <h1></h1>
+      </div>
+
+        <h2></h2>
+        <p></p>
+
 
     </div> <!-- /container -->
-	
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -100,6 +97,12 @@ title: 数据可视化开放发布
     <script src="js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+	
+<div class="page-header"></div>	
+<center>
 
+</center>
+<div class="page-header"></div>		
   </body>
 </html>
