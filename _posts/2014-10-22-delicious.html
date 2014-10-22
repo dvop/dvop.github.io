@@ -1,0 +1,87 @@
+---
+layout: layouts
+title: Delicious
+tags: Delicious
+dvtools: Gephi
+category: Gephi
+author: ooof
+author_links: http://digitip.net
+releasing_time: 2012/4/23
+source: http://ooof.github.io/DataVisualization/dv/rlqx/
+---
+
+<div class="container">
+
+	<!-- 页面上方展示图片 -->
+	<center><img src="{{ page.source }}img/delicious.png"></center> 
+
+	<center> <!-- 图片信息 -->
+		<p>{{ page.date | date_to_string }} < {{ page.tag }} > {{ page.dvtools }} <a href="{{ page.author_links }}">{{ page.author }}</a> {{ page.releasing_time }}</p>
+	</center>
+	 
+ <div class="page-header" > <!-- /.开放发布开始 -->
+        <h1>参照 <a href="http://ooof.github.io/DataVisualization/DVOPI.html">DVOPI</a> 发布的开放文档</h1>
+ </div>
+ 
+      <div class="row">	  
+        <div class="col-sm-12">
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              <h3 class="panel-title">数据来源</h3>
+            </div>
+            <div class="panel-body">   <!-- 下面填写开放发布的数据来源 -->
+              http://www.datatang.com/data/44194
+            </div>
+          </div>
+		  </div>
+		</div>			  
+	  
+      <div class="row"><!-- /.col-sm-4 -->
+        <div class="col-sm-4">
+
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title">所用数据</h3>
+            </div>
+            <div class="panel-body">   <!-- 下面填写可视化所用数据 -->
+              <ol><li><a href="{{ page.source }}db/dataset_617376.rar">原始压缩数据</a></li></ol>
+			  <ol><li><a href="{{ page.source }}db/Delicious.csv">处理后的csv</a></li></ol>
+            </div>
+          </div>
+        </div>
+		
+        <div class="col-sm-4">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">过程文件</h3>
+            </div>
+            <div class="panel-body">   <!-- 下面填写过程文件 -->
+              <ol><li><a href="{{ page.source }}gephi/delicious.gephi">gephi 文件</a></li></ol>
+            </div>
+          </div>
+        </div>
+		
+        <div class="col-sm-4"><!-- /.col-sm-4 -->
+          <div class="panel panel-danger">
+            <div class="panel-heading">
+              <h3 class="panel-title">输出结果</h3>
+            </div>
+            <div class="panel-body">     <!-- 下面填写各种方式的输出结果 -->
+              <ol><li><a href="{{ page.source }}img/1w-4.png">图片2</a></li></ol>
+              <ol><li><a href="{{ page.source }}img/1w-4-6.png">图片2</a></li></ol>
+            </div>
+          </div>		  
+        </div>
+		
+      </div> <!-- /.开放发布结束 -->
+
+
+
+      <div class="page-header">
+        <h1>制图说明</h1>
+      </div>
+      <div class="well">    <!-- 下面填写图片故事或制图过程/技术说明 -->
+        <p>人类 66 类种情绪合并为 22 这种，并按从最好状态到最坏状态渐变排序。</p>
+      </div>
+
+
