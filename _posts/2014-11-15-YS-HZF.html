@@ -1,19 +1,20 @@
 ---
 layout: layouts
-title: DeliciousTag 关系
-tags: Delicious
-dvtools: Gephi
-category: Gephi
+title: 黄之锋 FaceBook 时间线点赞图
+tags: Facebook
+dvtools: Excel
+category: FaceBook
 author: ooof
 author_links: http://digitip.net
-releasing_time: 2012/4/23
-source: http://ooof.github.io/DataVisualization/dv/Delicious/
+releasing_time: 2014/11/15
+source: http://ooof.github.io/DataVisualization/dv/fb-hzf/
 ---
 
 <div class="container">
 
 	<!-- 页面上方展示图片 -->
-	<center><img src="{{ page.source }}img/delicious.png"></center> 
+	<center><img src="{{ page.source }}img/黄之锋Facebook点赞图.png"></center> <br><br>
+	
 
 	<center> <!-- 图片信息 -->
 		<p>{{ page.date | date_to_string }} < {{ page.tag }} > {{ page.dvtools }} <a href="{{ page.author_links }}">{{ page.author }}</a> {{ page.releasing_time }}</p>
@@ -30,7 +31,7 @@ source: http://ooof.github.io/DataVisualization/dv/Delicious/
               <h3 class="panel-title">数据来源</h3>
             </div>
             <div class="panel-body">   <!-- 下面填写开放发布的数据来源 -->
-              <a href="http://www.datatang.com/data/44194">http://www.datatang.com/data/44194</a>
+              https://m.facebook.com/joshuawongchifung
             </div>
           </div>
 		  </div>
@@ -44,10 +45,8 @@ source: http://ooof.github.io/DataVisualization/dv/Delicious/
               <h3 class="panel-title">所用数据</h3>
             </div>
             <div class="panel-body">   <!-- 下面填写可视化所用数据 -->
-				<ol>
-					<li><a href="{{ page.source }}db/dataset_617376.rar">原始压缩数据</a></li>
-					<li><a href="{{ page.source }}db/Delicious.csv">处理后的csv</a></li>
-				</ol>
+              <ol><li><a href="{{ page.source }}db/黃之鋒 Joshua.html">最初采集到的数据</a></li></ol>
+			  <ol><li><a href="{{ page.source }}db/黄之锋FB时间线.csv">CSV数据</a></li></ol>
             </div>
           </div>
         </div>
@@ -58,7 +57,7 @@ source: http://ooof.github.io/DataVisualization/dv/Delicious/
               <h3 class="panel-title">过程文件</h3>
             </div>
             <div class="panel-body">   <!-- 下面填写过程文件 -->
-              <ol><li><a href="{{ page.source }}gephi/delicious.gephi">gephi 文件</a></li></ol>
+              <ol><li><a href="{{ page.source }}db/黄之锋FB时间线点赞图.xlsx">Excel 文件</a></li></ol>
             </div>
           </div>
         </div>
@@ -69,14 +68,10 @@ source: http://ooof.github.io/DataVisualization/dv/Delicious/
               <h3 class="panel-title">输出结果</h3>
             </div>
             <div class="panel-body">     <!-- 下面填写各种方式的输出结果 -->
-              <ol>
-				<li><a href="{{ page.source }}img/1w-4.png">图片2</a></li>
-				<li><a href="{{ page.source }}img/1w-4-6.png">图片2</a></li>
-			 </ol>
+              <ol><li><a href="{{ page.source }}img/雨伞革命期间黄之锋Facebook点赞图.png">雨伞革命期间黄之锋 FaceBook 点赞图</a></li></ol>
             </div>
           </div>		  
         </div>
-		
       </div> <!-- /.开放发布结束 -->
 
 
@@ -85,16 +80,7 @@ source: http://ooof.github.io/DataVisualization/dv/Delicious/
         <h1>制图说明</h1>
       </div>
       <div class="well">    <!-- 下面填写图片故事或制图过程/技术说明 -->
-        <p>用 Delicious 的 Tag 数据制作。
-		原数据的格式是：104	26575	weird music mp3 
-
-其中：104 是用户ID ； 26575 是 104 用户收集的一个页面的ID ； “weird music mp3” 是 104 用户为 26575 页面添加的 Tag 。 
-
-在这个可视化中，没有使用用户ID ，只使用了页面ID 和用户添加的页面的 Tag 。 
-
-实际方式是把页面 ID 与指向它的 Tag 互相连接。 
-
-原文件的数据量太大，无法在 Gephi 中全部处理，此例中，每个图使用的边数量为1万条左右。</p>
+        <p>收集了黄之锋从 2012.5.20 到 2014.11.15 在 FaceBook 时间线发布的 329 个帖子的点赞数据，希望通过可视化数据来检查一个社会活动者在现实与网络媒体的映射状况。</p>
       </div>
 
 
