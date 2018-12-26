@@ -9,14 +9,14 @@ dvtools: yEd
 author: ooof
 author_links: http://digitip.net
 releasing_time: 2018/12/24
-source: http://dvop.github.io/img/
+source: http://dvop.github.io/dv/myz/
 ---
 
 <div class="container">
 
 	<!-- 页面上方展示的内容 -->
 	<center>
-		<img src="{{ page.source }}2018-myz.png">
+		<img src="{{ page.source }}2018美中贸易争端.png">
 	</center> 
 	<br>
 	
@@ -50,7 +50,8 @@ source: http://dvop.github.io/img/
             </div>
             <div class="panel-body">   <!-- 下面填写可视化所用数据 {{ page.source }} -->
 			<ol>
-				<li><a href="">其它</a></li>
+				<li><a href="2018美中贸易争端数据.ods">2018美中贸易争端数据.ods</a></li>
+				<li><a href="2018美中贸易争端大事记">2018美中贸易争端大事记</a><li>
 			</ol>
             </div>
           </div>
@@ -77,7 +78,7 @@ source: http://dvop.github.io/img/
             <div class="panel-body">     <!-- 下面填写各种方式的输出结果 -->
               <ol>
 
-				<li></li> 
+				<li>无</li> 
 				</ol>
             </div>
           </div>		  
@@ -91,7 +92,15 @@ source: http://dvop.github.io/img/
         <h1>制图说明</h1>
       </div>
       <div class="well">    <!-- 下面填写图片故事或制图过程/技术说明 -->
-        <p>就是把维基中的数据提取到时间线中。</p>
+        <p>这个图把贸易战在2018期间的一些事件放在一个时间轴中。
+
+最后用 yEd 完成，总的感觉 yEd 画这样的图更自由。如果 yEd 支持以数据的方式读入就太方便了,但没有找。
+
+曾这样做过但失败了：
+
+1.用 libreOfficeCalc (模仿 Excel 的开源软件)及 Excel 的图表，插入散点图方式制作，好处是可以根据日期字段把相应的时间放到合适的时间轴中，缺点是大概散点图没有想到会处理这样大量的数据，以及没有想到会是这样的格式需求，所以，在外观上太不如意，最终放弃。
+
+2.用 libreOfficeDraw 这个做过一个小图测试（扩展名是 .odg），但应该是根本上没有 yEd 强大，只做一个简单的图就放弃了。</p>
       </div>
 
 
