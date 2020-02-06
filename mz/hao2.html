@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>css3-放大突出效果</title>
+<style>
+/*
+这里有较多介绍：
+https://www.hangge.com/blog/cache/detail_988.html
+http://caibaojian.com/transform.html
+*/
+div{display: block;}
+
+div p{
+/*transition: transform 0.25s ease;*/
+float: left;
+width: 80px;
+height: 80px;
+border-radius: 6px;  /*圆角*/
+/*transform: translate(0,0); 
+transition:all .2s ease-in 0s;  鼠标离开时缓慢的返回
+transition: all .1s linear;   均速
+transition: 1s height, 1s width;*/
+transition: linear .1s ;
+
+overflow: hidden;
+line-height: 30px; 
+text-align: left;
+margin: 10px; 
+background-color: #00b5e1;
+list-style: none;}    
+
+div p:hover{
+transition: 0.25s ease;  /*放大的速度*/
+transform: scale(1,1);/*缩放比例*/
+width: 300px;
+height: 300px;
+box-shadow: 0 0 10px #0000ff;
+cursor: pointer;
+/*overflow: hidden;  控制溢出*/
+overflow: scroll;
+}
+
+</style>
+</head>
+<body>
+<div>
+<p style="margin-left:414px;margin-top:284;">来源：山西日报<br>时间：2000.1.1<br>，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿话阿斯发是，阿斯顿发送阿斯顿会阿斯发的，时发生的会阿斯顿发说的话，阿斯顿发的生活</p>
+
+<p style="margin-left:1855px;margin-top:184;">说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿话阿斯发是，阿斯顿发送阿斯顿会阿斯发的，时发生的会阿斯顿发说的话，阿斯顿发的生活</p>
+
+<p style="margin-left:1866px;margin-top:244;">说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿话阿斯发是，阿斯顿发送阿斯顿会阿斯发的，时发生的会阿斯顿发说的话，阿斯顿发的生活</p>
+
+<p style="margin-left:2472px;margin-top:284;">说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿说的话，首都华盛顿会速度，123dsafasfasfa事都发生的生活阿斯顿会阿斯发撒的谎阿斯发啊但是发送电话啊但是发送电话阿斯发是，阿斯顿发送阿斯顿会阿话阿斯发是，阿斯顿发送阿斯顿会阿斯发的，时发生的会阿斯顿发说的话，阿斯顿发的生活</p>
+</div>
+</body>
+</html>
