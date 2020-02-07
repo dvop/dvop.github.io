@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>css3-放大突出效果</title>
+<style>
+/*
+这里有较多介绍：
+https://www.hangge.com/blog/cache/detail_988.html
+http://caibaojian.com/transform.html
+*/
+div{display: block;}
+
+div p{
+/*transition: transform 0.25s ease;*/
+float: left;
+width: 80px;
+height: 80px;
+border-radius: 6px;  /*圆角*/
+/*transform: translate(0,0); 
+transition:all .2s ease-in 0s;  鼠标离开时缓慢的返回
+transition: all .1s linear;   均速
+transition: 1s height, 1s width;*/
+transition: linear .1s ;
+
+overflow: hidden;
+line-height: 30px; 
+text-align: left;
+margin: 10px; 
+background-color: #00b5e1;
+list-style: none;}    
+
+div p:hover{
+transition: 0.25s ease;  /*放大的速度*/
+transform: scale(1,1);/*缩放比例*/
+width: 300px;
+height: 300px;
+box-shadow: 0 0 10px #0000ff;
+cursor: pointer;
+/*overflow: hidden;  控制溢出*/
+overflow: scroll;
+}
+
+</style>
+</head>
+<body>
+<div>
+<p style="margin-left:414px;margin-top:284;">来源：山西日报<br>时间：2020-01-25<br>，中国科学院上海药物研究所
+，中国科学院上海药物研究所和上海科技大学联合研究团队发现一批可能对新型肺炎有治疗作用的老药和中药
+,<a href="http://www.cas.cn/syky/202001/t20200125_4732909.shtml">http://www.cas.cn/syky/202001/t20200125_4732909.shtml</a>
+</p>
+
+<p style="margin-left:1855px;margin-top:184;">2020-01-31 22:46:00,新华视点
+,【上海药物所、武汉病毒所联合发现中成药双黄连口服液可抑制新型冠状病毒】,<a href="https://weibo.com/1699432410/Is55AfFA8">https://weibo.com/1699432410/Is55AfFA8</a>
+</p>
+
+<p style="margin-left:1866px;margin-top:244;">2020-01-31 23:19:00,人民前线
+,晚11点19分，“淘宝朝阳区断货了……都断货了。”
+,<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1580544484&ver=2131&signature=NATd91g2oMhc4HobKTxvyf5BCae9i4QNBu84Viv*rc4CWHIjycL69uyXC57kf1v0d5lcVh3l9lO1cy9kchYmtF4S7RSXz4vX8ZrUvVzID9JyOSKTTEPq8O*l3eHyckuP&new=1">淘宝店铺</a>
+
+</p>
+
+<p style="margin-left:2472px;margin-top:284;">2020-01-31 23:42:00
+,人民日报
+,中科院研究发现：双黄连口服液可抑制新型冠状病毒
+,<a href="http://scitech.people.com.cn/n1/2020/0131/c1007-31566098.html">http://scitech.people.com.cn/n1/2020/0131/c1007-31566098.html</a>
+</p>
+</div>
+</body>
+</html>
