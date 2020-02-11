@@ -1,0 +1,15 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="320" height="320"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <circle cx="160" cy="160" r="160" fill="#D80027" />
+
+<polygon style="fill:#FFDA44;" points="279.418,129.933 271.132,155.443 292.829,171.206 266.01,171.207 257.72,196.718 
+		249.432,171.206 222.611,171.208 244.31,155.441 236.021,129.932 257.719,145.699 	"/>
+<g font-size="40">
+<text x="36" y="100">武汉新动向</text>
+<text x="36" y="160" style="stroke: black;">新确诊 8000 人</text>
+<text x="36" y="210" style="stroke: black; stroke-width: 0.5;fill: none;">武汉医院向公众求助</text>
+</g>
+</svg>
