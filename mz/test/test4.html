@@ -1,0 +1,82 @@
+<style>
+
+div{display: block;}   /*显示内容*/
+
+div p{
+position: absolute;
+top:11px; 
+left:11px;
+
+float: left;
+width: 80px;
+height: 80px;
+border-radius: 12px;  /*圆角*/
+padding:6px 6px 6px 6px;  /*黑子内边框*/
+transition: linear .1s ;
+/*transform: translate(0,0); 
+transition: all .2s ease-in 0s;  鼠标离开时缓慢的返回
+transition: all .1s linear;   均速
+transition: 1s height, 1s width;
+transition: transform 0.25s ease;*/
+
+
+overflow: hidden; /*溢出显示滚动条*/
+line-height: 28px;  /*行高*/
+text-align: left; /*文本对齐方式，左中右*/
+margin:1px 1px 1px 1px; /*外边距，上、左、下、右*/
+background-color: #00b5e1;
+list-style: none;  /*为列表前面添加一个小图像*/
+
+}    
+
+div p:hover{
+
+position:absolute;
+top:-40px; 
+left:-40px; /*使放大位置回退*/
+transition: 0.55s ease;  /*放大的速度*/
+transform: scale(1,1);/*缩放比例*/
+width: 300px;
+height: 300px;
+box-shadow: 0 0 10px #0000ff; /* box-shadow: 2px 2px 5px #888888;为盒子添加一个边框*/
+cursor: pointer;
+overflow: hidden;  /*控制溢出*/
+overflow: scroll; /*默认光标形状*/
+z-index:99; /*保证在顶层显示*/
+
+}
+
+</style>
+
+<div>
+<p style="margin-left:10px;margin-top:10px;">我做左10，高10，测试</p>
+<p style="margin-left:10px;margin-top:50px;">我做左10，高50</p>
+<p style="margin-left:100px;margin-top:100px;">我做左100，高100</p>
+<p style="margin-left:100px;margin-top:1000px;">我做左100，高1000</p>
+
+
+
+<p style="margin-left:414px;margin-top:284;">来源：中国科学院上海药物研究所<br>时间：2020-01-25<br>，
+，中国科学院上海药物研究所和上海科技大学联合研究团队发现一批可能对新型肺炎有治疗作用的老药和中药
+,<a href="http://www.cas.cn/syky/202001/t20200125_4732909.shtml">http://www.cas.cn/syky/202001/t20200125_4732909.shtml</a>
+</p>
+
+<p style="margin-left:185px;margin-top:584;">2020-01-31 22:46:00,新华视点
+,【上海药物所、武汉病毒所联合发现中成药双黄连口服液可抑制新型冠状病毒】,<a href="https://weibo.com/1699432410/Is55AfFA8">https://weibo.com/1699432410/Is55AfFA8</a>
+</p>
+
+<p style="margin-left:166px;margin-top:744;">2020-01-31 23:19:00,人民前线
+,晚11点19分，“淘宝朝阳区断货了……都断货了。”
+,<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1580544484&ver=2131&signature=NATd91g2oMhc4HobKTxvyf5BCae9i4QNBu84Viv*rc4CWHIjycL69uyXC57kf1v0d5lcVh3l9lO1cy9kchYmtF4S7RSXz4vX8ZrUvVzID9JyOSKTTEPq8O*l3eHyckuP&new=1">淘宝店铺</a>
+
+</p>
+
+<p style="margin-left:472px;margin-top:884;">2020-01-31 23:42:00
+,人民日报
+,中科院研究发现：双黄连口服液可抑制新型冠状病毒
+,<a href="http://scitech.people.com.cn/n1/2020/0131/c1007-31566098.html">http://scitech.people.com.cn/n1/2020/0131/c1007-31566098.html</a>
+</p>
+
+
+
+</div>
