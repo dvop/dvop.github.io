@@ -15,7 +15,7 @@
         /* 定义首席框架的位置 */
         
         div {
-            margin-top: 80px;
+            margin-top: 0px;
             margin-left: 0px;
         }
         /* 以下定义画竖线的 CSS */
@@ -30,7 +30,7 @@
             /* 定义竖线右边的空格位置 */
             padding-left: 0px;
             /* 线条高度 */
-            height: 3300px;
+            height: 3500px;
             /* 扩大点击范围 border:5px #FFAC55 solid; */
             /* border-left: 5px solid transparent; */
         }
@@ -110,6 +110,23 @@
             z-index: 99;
         }
         
+        @font-face {
+            font-family: 'ooof';
+            src: url('font/Ancient Medium.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        .year {
+            position: absolute;
+            width: 70px;
+            /* Arial Black   ,Bitstream Charter*/
+            font-family: "ooof", Times, serif;
+            padding: 0px 0px 0px 0px;
+            font-size: 64px;
+            line-height: 20px;
+        }
+        
         .time {
             position: absolute;
             /* 使用百分比后，下面的定义无效 */
@@ -117,7 +134,8 @@
             margin-left: 110px; */
             width: 70px;
             /* height: 67px; */
-            padding: 20px 26px 26px 0px;
+            /* padding: 20px 26px 26px 0px; */
+            padding: 20px 0px 0px 0px;
             font-size: 24px;
             line-height: 3px;
             /*文本对齐方式，左中右，，目前居右*/
@@ -126,33 +144,32 @@
             padding-right: 0px;
         }
         
-        .is-Negative {
-            width: 300px;
-            height: 200px;
-            padding: 20px;
+        .main {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 0px;
+            width: 1300px;
+            height: 0px;
             position: absolute;
-            top: 50%;
-            left: 20%;
-            /* margin-left: -170px; */
-            /* (width + padding)/2 */
-            /* margin-top: -120px; */
-            /* (height + padding)/2 */
+            left: 50%;
+            top: 0%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 
-<body>
+<body class="main">
     <div>
-        <p class="line" style="margin-left: 24.9%;" title="竖线标题-1"></p>
-        <p class="line" style="margin-left: 49.9%;" title="竖线标题-2"></p>
-        <p class="line" style="margin-left: 74.8%;" title="竖线标题-3"></p>
+        <p class="line " style="margin-left: 24.9%; " title="竖线标题-1 "></p>
+        <p class="line " style="margin-left: 49.9%; " title="竖线标题-2 "></p>
+        <p class="line " style="margin-left: 74.8%; " title="竖线标题-3 "></p>
 
+        <p class="year " style="margin-left:11.6%; margin-top:715px; ">2020 </p>
 
-
-        <p class="time" style="margin-left:19.5%; margin-top:715px;">01/07 </p>
-        <p class="time" style="margin-left:19.5%; margin-top:1035px;">01/11 </p>
-        <p class="time" style="margin-left:19.5%; margin-top:1275px;">01/14 </p>
-        <p class="time" style="margin-left:19.5%; margin-top:1355px;">01/15 </p>
+        <p class="time " style="margin-left:19.5%; margin-top:715px; ">01/07 </p>
+        <p class="time " style="margin-left:19.5%; margin-top:1035px; ">01/11 </p>
+        <p class="time " style="margin-left:19.5%; margin-top:1275px; ">01/14 </p>
+        <p class="time " style="margin-left:19.5%; margin-top:1355px; ">01/15 </p>
 
 
         <p class=" fuankuai " style="margin-left:25%;margin-top:715px;background-color: #bbb2a8 ; ">
@@ -271,6 +288,7 @@
 
 
     </div>
+
 </body>
 
 </html>
