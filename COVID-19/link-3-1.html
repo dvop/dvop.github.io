@@ -4,6 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>测试页面</title>
+
+
+    <Script>
+        mounted: function() {
+                let that = this;
+                $(document).on('click', function(e) {
+                    let dom = $('.fuankuai')[0]; // 自定义div的class
+                    if (dom) {
+                        // 如果点击的区域不在自定义dom范围
+                        if (!dom.contains((e.target))) {
+                            that.showMyDiv = false;
+                        }
+                    }
+                });
+            },
+            beforeDestroy() {
+                $(document).off('click');
+            }
+    </Script>
+
+
     <style>
         /* 定义页面的像素级边距  */
         
@@ -123,6 +144,7 @@
             width: 70px;
             /* Arial Black   ,Bitstream Charter*/
             font-family: "Impact", Times, serif;
+            margin-left: 4px;
             padding: 0px 0px 0px 0px;
             font-size: 54px;
             color: rgb(15, 15, 15);
@@ -148,6 +170,10 @@
             padding-right: 0px;
         }
         
+        .time.x1 {
+            margin-left: 100px;
+        }
+        
         .main {
             text-align: center;
             background-color: rgb(65, 68, 65);
@@ -168,9 +194,9 @@
         <p class="line " style="margin-left: 440px; " title="竖线标题-2 "></p>
         <p class="line " style="margin-left: 700px; " title="竖线标题-3 "></p>
 
-        <p class="year " style="margin-left:0px; margin-top:715px; ">2020 </p>
+        <p class="year " style="margin-top:715px; ">2020 </p>
 
-        <p class="time " style="margin-left:100px; margin-top:715px; ">01/07 </p>
+        <p class="time " style="margin-left:105px; margin-top:715px; ">01/07 </p>
         <p class="time " style="margin-left:100px; margin-top:1035px; ">01/11 </p>
         <p class="time " style="margin-left:100px; margin-top:1275px; ">01/14 </p>
         <p class="time " style="margin-left:100px; margin-top:1355px; ">01/15 </p>
