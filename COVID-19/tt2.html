@@ -1,58 +1,46 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8" />
-    <title>test</title>
-
-    <script>
-        $("#products-area").on('click', function(e) {
-            var $target = $(e.target);
-
-            if (!$target.closest('.product').length) {
-                console.log('clicked')
-            }
-        });
-    </script>
-
-    <style>
-        #products-area {
-            border: 1px solid red;
-            padding: 25px;
-        }
-        
-        .products {
-            border: 1px solid green;
-            height: 500px;
-            padding: 10px;
-        }
-        
-        .product {
-            border: 1px solid yellow;
-        }
-    </style>
-
-
-</head>
-
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <body>
 
+    <div class="w3-container">
+        <h2>W3.CSS Modal</h2>
+        <p>In this example we demonstrate how to close the modal by clicking outside of the modal box.</p>
 
-    <div id="products-area">
-        <div class="products">
-            <div class="product">p
-                <div class="image-wrapper"></div>
-                <div class="handles"></div>
-            </div>
-            <div class="product">p
-                <div class="image-wrapper"></div>
-                <div class="handles"></div>
-            </div>
-            x
+        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Modal</button>
 
-            <!-- I want to have a function to tell when clicks on "empty area". like here -->
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-card-4">
+                <header class="w3-container w3-teal">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                    <h2>Modal Header</h2>
+                </header>
+                <div class="w3-container">
+                    <p>You have two options to close this modal:</p>
+                    <p>Click on the "x" or click anywhere outside of the modal!</p>
+                </div>
+                <footer class="w3-container w3-teal">
+                    <p>Modal Footer</p>
+                </footer>
+            </div>
         </div>
     </div>
 
+    <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
 </body>
+
+</html>
