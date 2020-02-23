@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+
+    <script>
+        $(document).click(function(e) {
+                    var _con = $('.tardiv'); // 设置目标区域
+                    if (!_con.is(e.target) && _con.has(e.target).length === 0) {
+                        $('.tardiv').remove();
+                    }
+    </script>
+
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background: #eee;
+        }
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+    <div class="tardiv">div块</div>
+
+</body>
