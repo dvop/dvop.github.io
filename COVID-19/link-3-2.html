@@ -6,19 +6,6 @@
     <title>新版</title>
 
 
-    <script>
-        $(document).click(function(e) {
-            console.log('hide');
-            var _con = $('.fuankuai'); // 设置目标区域
-            if (!_con.is(e.target) && _con.has(e.target).length === 0) {
-                _con.hide(500);
-            } else {
-                _con.show(400);
-            }
-        });
-    </script>
-
-
     <style>
         /* 定义页面的像素级边距  */
         
@@ -35,6 +22,25 @@
             margin-left: 0px;
         }
         /* 以下定义画竖线的 CSS */
+        
+        .tou {
+            margin-top: 0px;
+            margin-left: 0px;
+            width: 98%;
+            height: 180px;
+            line-height: 20px;
+            text-align: left;
+            padding: 8px 8px 8px 8px;
+            font-size: 19px;
+            color: rgb(196, 191, 191);
+            margin: 0px;
+            border: 1px solid;
+            border-color: rgb(184, 186, 211);
+        }
+        
+        .tou:hover {
+            border: 1px solid rgb(243, 65, 10);
+        }
         
         .line {
             position: absolute;
@@ -183,6 +189,19 @@
 </head>
 
 <body ontouchstart>
+
+
+    <p class="tou">
+
+        数据来源：<a href="https://zh.wikipedia.org/wiki/2019%E6%96%B0%E5%9E%8B%E5%86%A0%E7%8B%80%E7%97%85%E6%AF%92%E7%96%AB%E6%83%85">维基百科 - 2019冠狀病毒病疫情</a>
+        <br> 说明： sdfafad adfasf
+        <br> 阿迪发家史电话啊但是哈哈
+
+
+
+
+    </p>
+
     <div>
         <p class="line " style="margin-left: 180px; " title="竖线标题-1 "></p>
         <p class="line " style="margin-left: 440px; " title="竖线标题-2 "></p>
