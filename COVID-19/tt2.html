@@ -7,10 +7,11 @@
 
     <script>
         $(document).click(function(e) {
-                    var _con = $('.tardiv'); // 设置目标区域
-                    if (!_con.is(e.target) && _con.has(e.target).length === 0) {
-                        $('.tardiv').remove();
-                    }
+            var _con = $('.tardiv'); // 设置目标区域
+            if (!_con.is(e.target) && _con.has(e.target).length === 0) {
+                $('.tardiv').remove();
+            }
+        });
     </script>
 
     <style>
