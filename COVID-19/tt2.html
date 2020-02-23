@@ -1,46 +1,49 @@
 <!DOCTYPE html>
-<html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style type="text/css">
+        #test {
+            width: 80px;
+            //height: 60px;
+            margin: 10px auto;
+            /*border: 1px solid blue;*/
+        }
+        
+        #button {
+            display: block;
+            width: 50px;
+            margin: 10 auto;
+        }
+        
+        #content {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            margin: 10 auto;
+            /*background: #1d1d1d;*/
+            border: 1px solid red;
+        }
+        
+        #shard {
+            position: absolute;
+            display: block;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #d4f7d4;
+        }
+    </style>
+</head>
 
 <body>
-
-    <div class="w3-container">
-        <h2>W3.CSS Modal</h2>
-        <p>In this example we demonstrate how to close the modal by clicking outside of the modal box.</p>
-
-        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Modal</button>
-
-        <div id="id01" class="w3-modal">
-            <div class="w3-modal-content w3-card-4">
-                <header class="w3-container w3-teal">
-                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                    <h2>Modal Header</h2>
-                </header>
-                <div class="w3-container">
-                    <p>You have two options to close this modal:</p>
-                    <p>Click on the "x" or click anywhere outside of the modal!</p>
-                </div>
-                <footer class="w3-container w3-teal">
-                    <p>Modal Footer</p>
-                </footer>
-            </div>
-        </div>
+    <div id="shard"></div>
+    <div id="test">
+        <a href="javascript:;" id="button">clickMe</a>
+        <div id="content" style="display:none">show</div>
     </div>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-
-</body>
-
-</html>
