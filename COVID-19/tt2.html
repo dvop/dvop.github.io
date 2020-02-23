@@ -6,19 +6,29 @@
     <title>test</title>
 
     <script>
-        $(document).click(function(e) {
-            var _con = $('.tardiv'); // 设置目标区域
-            if (!_con.is(e.target) && _con.has(e.target).length === 0) {
-                $('.tardiv').remove();
+        $("#products-area").on('click', function(e) {
+            var $target = $(e.target);
+
+            if (!$target.closest('.product').length) {
+                console.log('clicked')
             }
         });
     </script>
 
     <style>
-        .tardiv {
-            width: 200px;
-            height: 200px;
-            background: #eee;
+        #products-area {
+            border: 1px solid red;
+            padding: 25px;
+        }
+        
+        .products {
+            border: 1px solid green;
+            height: 500px;
+            padding: 10px;
+        }
+        
+        .product {
+            border: 1px solid yellow;
         }
     </style>
 
@@ -29,6 +39,20 @@
 <body>
 
 
-    <div class="tardiv">div块</div>
+    <div id="products-area">
+        <div class="products">
+            <div class="product">p
+                <div class="image-wrapper"></div>
+                <div class="handles"></div>
+            </div>
+            <div class="product">p
+                <div class="image-wrapper"></div>
+                <div class="handles"></div>
+            </div>
+            x
+
+            <!-- I want to have a function to tell when clicks on "empty area". like here -->
+        </div>
+    </div>
 
 </body>
