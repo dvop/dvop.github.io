@@ -7,26 +7,9 @@
 
 
     <script>
-        // mounted: function() {
-        //         let that = this;
-        //         $(document).on('click', function(e) {
-        //             let dom = $('.fuankuai')[0]; // 自定义div的class
-        //             if (dom) {
-        //                 // 如果点击的区域不在自定义dom范围
-        //                 if (!dom.contains((e.target))) {
-        //                     that.showMyDiv = false;
-        //                 }
-        //             }
-        //         });
-        //     },
-        //     beforeDestroy() {
-        //         $(document).off('click');
-        //     }
-
-
         $(document).click(function(e) {
             console.log('hide');
-            var _con = $('#designer .fuankuai'); // 设置目标区域
+            var _con = $('.fuankuai'); // 设置目标区域
             if (!_con.is(e.target) && _con.has(e.target).length === 0) {
                 _con.hide(500);
             } else {
