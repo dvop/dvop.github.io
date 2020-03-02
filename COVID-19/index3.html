@@ -45,7 +45,7 @@
                var seachText=$("#seach").val();
                if(seachText!=""){
                   //构造显示页面
-                  var tab="<table width='800' border='1' cellpadding='0' cellspacing='0'><tr align='center'><td>编号</td><td>名称</td><td>年龄</td></tr>";
+                  var tab="<table width='100%' border='1' cellpadding='0' cellspacing='0'><tr align='center'><td>编号</td><td>名称</td><td>年龄</td></tr>";
                   //遍历解析json
                   $.each(user,function(id, item){
                      //如果包含则为table赋值
@@ -56,7 +56,7 @@
                   tab+="</table>";
                   $("#div").html(tab);
                   //重新覆盖掉，不然会追加
-                  tab="<table width='800' border='1' cellpadding='0' cellspacing='0'><tr align='center'><td>编号</td><td>名称</td><td>年龄</td></tr>";
+                  tab="<table width='100%' border='1' cellpadding='0' cellspacing='0'><tr align='center'><td>编号</td><td>名称</td><td>年龄</td></tr>";
                }else{
                   $("#div").html("");
                }
