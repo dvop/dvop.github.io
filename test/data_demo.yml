@@ -1,0 +1,19 @@
+- date: 2019年12月1日
+  items:
+  - item_name: news
+    content: "我喜欢七月的风，因为它并不急促，我爱秋天的落叶，因为它告别了世界，"
+  - item_name: group
+    content: "有意义的话有很多，但不知意义是什么，每一次人生的过渡都否定了这种意义，"
+
+- date: 2019年12月8日
+  items:
+  - item_name: news
+    content: "小时候希望美好，所以我抱着童话，"
+
+- date: 2019年12月9日
+  items:
+
+- date: 2019年12月10日
+  items:
+  - item_name: news
+    content: "渐渐地长大了，那本童话书也被我忘了。"
