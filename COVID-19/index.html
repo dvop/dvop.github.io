@@ -4,28 +4,27 @@
     <title>新冠肺炎-关键词-时间轴</title>
     <meta charset="utf-8">
     <style>
-    
-
+	/*table{ border-collapse:collapse; }*/
+	.td {border:#000000   solid 6px ; padding:8px;}
     </style>
     <script src="data.json"></script>
     <script src="jquery-3.4.1.js"></script>
     <script>
-
         $(document).ready(function() {
             var seach = $("#seach");
             seach.keyup(function(event) {
                 var seachText = $("#seach").val();
                 if (seachText != "") {
                     //构造显示页面
-                    var tab = "<table width='49%' align='left' border='1' cellpadding='0' cellspacing='0' >";
+                    var tab = "";
                     //遍历解析json
                     $.each(data, function(id, item) {
                         //如果包含则为table赋值
                         if (item.content.indexOf(seachText) != -1) {
-                            tab += "<tr align='left'><td>" + item.date + "，" + item.content + "</td></tr>";
+                            tab += "<tr align='left'><td class='td'>" + item.date + "，" + item.content + "</td></tr>";
                         }
                     })
-                    tab += "</table>";
+                    tab += "";
                     $("#div").html(tab);
                     //重新覆盖掉，不然会追加
                     tab = "";
@@ -40,13 +39,13 @@
             seach.keyup(function(event) {
                 var seachText = $("#seach-2").val();
                 if (seachText != "") {
-                    var tab = "<table width='49%' align='right' border='1' cellpadding='0' cellspacing='0' >";
+                    var tab = "";
                     $.each(data, function(id, item) {
                         if (item.content.indexOf(seachText) != -1) {
-                            tab += "<tr align='left'><td>" + item.date + "，" + item.content + "</td></tr>";
+                            tab += "<tr align='left'><td  class='td'>" + item.date + "，" + item.content + "</td></tr>";
                         }
                     })
-                    tab += "</table>";
+                    tab += "";
                     $("#div2").html(tab);
                     tab = "";
                 } else {
@@ -61,13 +60,25 @@
 <body>
     <center>
         <p style="font:20;">
-            关注1：<input style="font:28px arial; height:1.8em; width:200px;" id="seach"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 关注2：
-            <input style="font:28px arial; height:1.8em; width:200px;" id="seach-2"/>
-        </p>
-        <div id="div"></div>
-        <div id="div2"></div>
-        <br><br><br><br>
- <p>数据来源:<a href="https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md">疫情与舆情:武汉新冠肺炎时间线</p>
+        <table width="100%" border='0'><tr>
+        <td align="center">关注1：<input style="font:28px arial; height:1.8em; width:200px;" id="seach" /></td>
+        <td align="center">关注2：<input style="font:28px arial; height:1.8em; width:200px;" id="seach-2" /></td>
+        </tr></table>
+       </p>
+
+        <table width="100%" border='0' cellpadding='0' cellspacing='0'>
+            <tr valign="top">
+                <td width="48%"  >
+                    <div id="div"></div>
+                </td>
+                <td width="48%" >
+                    <div id="div2"></div>
+            </tr>
+        </table>
+        
+        <br>
+
+        <p>数据来源：<a href="https://github.com/Pratitya/wuhan2020-timeline/blob/master/%E6%97%B6%E9%97%B4%E7%BA%BFTIMELINE.md">疫情与舆情:武汉新冠肺炎时间线</p>
 
     </center>
 </body>
