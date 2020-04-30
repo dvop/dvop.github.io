@@ -1,0 +1,7154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    
+    <script src="file:///C|/Documents%20and%20Settings/liuyong/&#26700;&#38754;/29_files/MochiKit.js" type="text/javascript"></script><title>#cnbloggercon - Archive for 29 October, 2006</title>
+    
+	<script src="file:///C|/Documents%20and%20Settings/liuyong/&#26700;&#38754;/29_files/prototype.js" type="text/javascript"></script>
+	<script src="file:///C|/Documents%20and%20Settings/liuyong/&#26700;&#38754;/29_files/moo.js" type="text/javascript"></script>
+	
+	<script charset="utf-8" type="text/javascript" language="javascript">
+	// 
+	
+		//initialise current date.
+		var currentDate = new Date();
+		var effects = [];
+		var year_map = function (year) {
+			if (currentDate.getFullYear() == year) {
+				return OPTION({'value': year, 'selected': 'selected'}, year);
+			} else {
+				return OPTION({'value': year}, year);
+			}
+		}
+		
+		var createYears = function(start, end) {
+			start = start.getFullYear();
+			end = end.getFullYear();
+			var iteryr = start;
+			var avail_years = [];
+			while(iteryr <= end) {
+				avail_years.push(iteryr);
+				iteryr++;
+			}
+			var yearnav = SELECT({'id': 'yearnav', 'onchange': 'updateYear(this);'}, map(year_map, avail_years));
+			swapDOM('yearnav', yearnav);
+		}
+		
+		var month_map = function(month) {
+			var monthNames = new Array(12);
+			monthNames[0] = 'January';
+			monthNames[1] = 'February';
+			monthNames[2] = 'March';
+			monthNames[3] = 'April';
+			monthNames[4] = 'May';
+			monthNames[5] = 'June';
+			monthNames[6] = 'July';
+			monthNames[7] = 'August';
+			monthNames[8] = 'September';
+			monthNames[9] = 'October';
+			monthNames[10] = 'November';
+			monthNames[11] = 'December';
+			
+			if (currentDate.getMonth() == month) {
+				return OPTION({'selected': 'selected', 'value': month}, monthNames[month]);
+			} else {
+				return OPTION({'value': month}, monthNames[month]);
+			}
+		}
+		
+		var createMonths = function(start, end) {
+			
+			var _currentYear = currentDate.getFullYear();
+			var _startYear = start.getFullYear();
+			var _endYear = end.getFullYear();
+			
+			var startMonth = 0;
+			var endMonth = 11;
+			//Decide how many months we need
+			if (_currentYear == _startYear) {
+				// Start at startYear's first month
+				startMonth = start.getMonth();
+			}
+			
+			if (_currentYear == _endYear) {
+				// End at endYear's last month
+				endMonth = end.getMonth();
+			}
+			
+			var _iterMonth = startMonth;
+			var months = [];
+			while (_iterMonth <= endMonth) {
+				months.push(_iterMonth);
+				_iterMonth++;
+			}
+			
+			var monthnav = SELECT({'id': 'monthnav', 'onchange': 'updateMonth(this);'}, map(month_map, months));
+			swapDOM('monthnav', monthnav);
+		}
+		
+		var isLeapYear = function(year) {
+			//find out if this is a leap year...
+			// Damn you and your complexities February...  dodgy spelling and dodgy numbers of days.
+			var result = 0;
+			if ((year % 4) == 0) {
+				//it's divisible by 4
+				if ((year % 100) == 0) {
+					//it's divisible by 100
+					// Is it also divisible by 400?
+					result = ((year % 400) == 0);
+				} else {
+					result = 1;
+				}
+			} else {
+				result = 0;
+			}
+			return (result);
+		}
+		
+		var day_map = function(day) {
+			if (currentDate.getDate() == day) {
+				return OPTION({'value': day, 'selected': 'selected'}, day);
+			} else {
+				return OPTION({'value': day}, day);
+			}
+		}
+		
+		var createDays = function(start, end) {
+			var _currentMonth = currentDate.getMonth();
+			var _startMonth = start.getMonth();
+			var _endMonth = end.getMonth();
+			var days = new Array(12);
+			  days[0] = 31; // January
+			  days[1] = (isLeapYear(currentDate.getFullYear)) ? 29 : 28; // February
+			  days[2] = 31; // March
+			  days[3] = 30; // April
+			  days[4] = 31; // May
+			  days[5] = 30; // June
+			  days[6] = 31; // July
+			  days[7] = 31; // August
+			  days[8] = 30; // September
+			  days[9] = 31; // October
+			  days[10] = 30; // November
+			  days[11] = 31; // December
+			var _startDay = 1;
+			var _endDay = days[_currentMonth];
+			
+			if (_currentMonth == _startMonth) {
+				_startDay = start.getDate();
+			}
+			if (_currentMonth == _endMonth) {
+				_endDay = end.getDate();
+			}
+			var _iterDay = _startDay;
+			var _days = [];
+			while (_iterDay <= _endDay) {
+				_days.push(_iterDay);
+				_iterDay++;
+			}
+			var daynav = SELECT({'id': 'daynav', 'onchange': 'updateDay(this);'}, map(day_map, _days));
+			swapDOM('daynav', daynav);
+		}
+		
+		var createArcNav = function() {
+			addElementClass('masternavbottom', 'hidden');
+			currentDate = isoDate($('arc_date').value);
+			var lastDate = isoDate($('last_date').value);
+			var firstDate = isoDate($('first_date').value);
+			
+			createYears(firstDate, lastDate);
+			createMonths(firstDate, lastDate);
+			createDays(firstDate, lastDate);
+		}
+		
+		var updateYear = function(element) {
+			var year = element.value;
+			currentDate = new Date(year, currentDate.getMonth(), currentDate.getDate());
+			createArcNav();
+		}
+		
+		var updateMonth = function(element) {
+			var month = element.value;
+			currentDate = new Date(currentDate.getFullYear(), month, currentDate.getDate());
+			createArcNav();
+		}
+		
+		var updateDay = function(element) {
+			var day = element.value;
+			currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+		}
+		
+		var archiveJump = function() {
+			var host = document.location.host
+			var service = getElement("servicename").value;
+			var channel = getElement("channelname").value;
+			var uri = "http://" + host + "/archive/" + service + "/" + channel;
+			var datestring = toISODate(currentDate);
+			datestring = datestring.split("-");
+			uri = uri + "/" + datestring[0] + "/" + datestring[1] + "/" + datestring[2];
+			document.location = uri;
+		}
+		
+		var initEffects = function() {
+			effects['navbarSlide'] = new fx.Height("navslider", {duration: 500, onComplete: getElement('arctablink').blur()});
+			effects['navbarSlide'].hide();
+			removeElementClass('navslider', 'hidden');
+		}
+		
+		addLoadEvent(createArcNav);
+		addLoadEvent(initEffects);
+		
+		
+	// 
+	</script>
+  
+    <style type="text/css">
+        #pageLogin
+        {
+            font-size: 10px;
+            font-family: verdana;
+            text-align: right;
+        }
+    </style>
+<link href="file:///C|/Documents%20and%20Settings/liuyong/&#26700;&#38754;/29_files/style.css" type="text/css" rel="stylesheet"></head><body>
+    
+    
+<div id="masternavbottom" class="navbottom hidden"></div>
+    
+
+    
+	
+	<div id="content">
+	
+	<h1>#cnbloggercon on Freenode</h1>
+
+	<h4>Archive for 29 October, 2006</h4>
+	
+	<div id="messages">
+		<table>
+			
+			<tbody><tr class="daychange">
+				<td colspan="3">29 October 2006</td>
+			</tr>
+			<tr class="even">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">collin:</td>
+				<td class="line">今天几点开始</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:04</td>
+				
+				
+				<td class="nick">collin:</td>
+				<td class="line">%RNickServ</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:04</td>
+				
+				
+				<td class="nick">collin:</td>
+				<td class="line">%RNickServ HELP</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:19</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">怎么都没人？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:23</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">大家怎么都不说话</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">第一场: Danny Yu: 教育和Blog</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:24</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">今天有哪些直播途径？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:28</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">+tnc</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:30</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">星韵地理博客堂</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:31</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">oblog开发团队</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:32</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我们正在做什么，我们目前需要什么？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:33</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">一个地理老师用的blog</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:33</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">下面说一个案例</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:33</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">url多少？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:33</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">url?</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:34</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line"><a href="http://www.oblog.com/">http://www.oblog.com</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:34</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">这个我知道  你们现在有多少人？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:36</td>
+				
+				
+				<td class="nick">Isaac:</td>
+				<td class="line">why can't I run xchat?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:36</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">现在可以吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:37</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">which version r u running?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:37</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">2.6.6-1 Win32 版本有bug, 请不要使用</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:37</td>
+				
+				
+				<td class="nick">Isaac:</td>
+				<td class="line">the one you recommended?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:39</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">推荐使用 <a href="http://www.silverex.org/download/xchat-2.6.4-1.exe">http://www.silverex.org/download/xchat-2.6.4-1.exe</a> (2.6.6-1 Win32 版本有bug, 请不要使用) 或者 Chatzilla</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">星韵需要什么？1团队</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">星韵不想去做技术，还需要少量的赞助。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:43</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">星韵还需要少量资金的赞助</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:43</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">赞助不是无偿的, 星韵是一个专业的平台, 可以提供广告服务</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:45</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">凯凯的edudigg</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:46</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">为什么有那么多digg clone了, 还要做edudiigg, 因为教育是非常复杂的, 需要有专门的digg来发掘有价值的东西</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:47</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">edudigg的发展方向是由edudigg的用户决定的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:49</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">blog这样的工具是给有理想有抱负的人使用的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:50</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line"><a href="https://secure.wikimedia.org/wikipedia/zh/w/index.php">https://secure.wikimedia.org/wikipedia/zh/w/index.php</a> ←這是等一下要講的維基百科，大家可以試著由這個網址登入參訪</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:50</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">柳栋老师呼吁有理想有抱负的更多的社会支持. 支持教育blogger</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:52</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">danny: 未来教育的苗头</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:52</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">四个20岁一下的朋友</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:52</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">跟上播客</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:53</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">朱宇晨, 自住学习者. 动漫专业</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:53</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">柯声茂, 巴黎, 创业学习</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">孙梦, Farah Sun, Homeschooling</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">17岁</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">特点, 独立,</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">有主见</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">这四个年轻人，非常有主见，非常有自己的判断</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">未来的教育苗头</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">非常感谢我们这些有理想有包袱的人</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">接下来的是 KJ from wikipedia</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:55</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">维基百科</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:56</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">sorry, KJ在下下位</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:56</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">danwei.org</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:56</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">南非</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:56</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Jeremy</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:57</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">我是第三位~ :D</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:58</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">01:58</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">博客的性格和魅力</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">01:59</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">nick ooof</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:01</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">博客, 名字很重要</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">名字要好记</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">可靠的信息</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">垃圾信息太多, 所以要提供可靠的信息</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">独特的内容</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">一致性</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:03</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">透明: 如果你做错了, 要承认</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:04</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">针对性: 内容不能太广泛, 要限制在一定范围, 要有特定的目标人群</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:05</td>
+				
+				
+				<td class="nick">qi:</td>
+				<td class="line">今天开会各位老大聊些什么呢？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:05</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">多元化: 网络外还有人</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:05</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">/ diversity is everything</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:06</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">态度开发, 让更多人能够参与</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:06</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">态度开放</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:06</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">因为我没有社会主义的体制，</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">所以我没有自己的单位</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">最近四年是做一个很小的广告公司</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">danwei.org</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">danwei.tv</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">也有一个媒体</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:07</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">是中国的媒体，然后用英文</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:08</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">03年10月份, 第一篇 宋美龄去世, 翻译sohu</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:08</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">03年 ，十一月份，中国木子美已经有点名气。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:08</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">木子美</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:08</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">然后我搜索她的blog，</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:09</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">第一个英文翻译木子美, 网络流量彪升</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:09</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">翻译木子美，然后突然访问量就打了，</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:09</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">感谢木子美</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:09</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">所以，我很感谢木子美</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:10</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">v.</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:11</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">03年底 翻译 变性手术 变性人参加选美</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:11</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">展现中国多元化的一面</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:11</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">04年底有一定的读者群</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:12</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">没有稿费, 比较难找作者</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:12</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Joel Martinsen</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:13</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">开始扫描报纸封面. 翻译大标题</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:13</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">两种人喜欢看, 外国人, 和 海外的中国人</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">开始追踪同性恋的问题</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">讨论同性恋问题是增加网站吸引力的好方法</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:15</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">开始有人email投稿</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">博客门</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">按摩乳</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:20</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">阿姨隔离政策</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:22</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">四天后会所改了隔离政策</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">总的来讲八卦的东西比较多</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">同时也有很多严肃的题目</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">幽默是好网站的特征</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">开始玩视频 danwei.tv</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">因为要吃饭, 还是希望通过广告赚点钱</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">sexy beijing</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:27</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line"><a href="http://www.danwei.org/danwei_tv/sexy_beijing_weddings_gone_wil.php">http://www.danwei.org/danwei_tv/sexy_beijing_weddings_gone_wil.php</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:29</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">\\ 很有趣, 大家都应该看看</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:33</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">KJ 上台了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:36</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">wikipedia 和社区</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:36</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">KJ-Wikia: 微生物学硕士</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:37</td>
+				
+				
+				<td class="nick">chatcn:</td>
+				<td class="line">number5:how to view the vidio with v2?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:37</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">以共同协作</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:37</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">与cc有点类似</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:37</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">创作开放 内容开放</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:39</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">2002年10月24日，开始有正式的中文</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:39</td>
+				
+				
+				<td class="nick">liuyong_:</td>
+				<td class="line">之前，中文输入有问题</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:39</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">hi</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:40</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">wikiwiki 是快点快点的意思，听说是夏威夷语</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:47</td>
+				
+				
+				<td class="nick">chatcn:</td>
+				<td class="line">number5,tell me the tel of the skypecast for the audio,please!</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:47</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line"><a href="https://skypecasts.skype.com/skypecasts/skypecast/detailed.html?id_talk=46229">https://skypecasts.skype.com/skypecasts/skypecast/detailed.html?id_talk=46229</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:48</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">the url of KJ's wiki ??</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:48</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">I searched but no founf</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:48</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">I searched but no found</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:50</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">网打不开了，刚才正往出发一些照片</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:50</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">test</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:53</td>
+				
+				
+				<td class="nick">chatcn:</td>
+				<td class="line">I am not lucky enough to attend the meeting ,I want to see the vidio now, how to handle the v2 stream,please?</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:56</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">南通中学的？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:56</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">做广告！</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">ooof,5,你们好</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">早上挂了一早上了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">hi, cnsns</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">会议咋了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">咋 样了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:58</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">good, 早上的session都很有趣</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:59</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">早上没时间来看</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">02:59</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">有人做了一个软广告</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">02:59</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">看一下IRC log</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:00</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">结束了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:00</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">下面是赞助商玩具拍卖时间</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:00</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">什么样的软广告，其实所有都可以认为是广告，关键是受众有利利益不</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:00</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哦，挺好</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:01</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">今天早上结束得挺早啊</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:01</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">是不是有人没讲，还是进程改了一下</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">没有结束呢, 中场拍卖而已</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:02</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">agoo 在做super model</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:03</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">嗯，未完在好</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:03</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">未完成好</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:03</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">老孔好</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:04</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">在家？还是在单位呢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:04</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">在家</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:04</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哪个区？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:04</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">查户口？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:05</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">调查</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:05</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">北京的WEB2.0分布区域</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:05</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">朝阳</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:05</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:06</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">emily的玩具要拍多少钱？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:06</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">拍卖玩具车，有宝宝的可以试一下</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:06</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">现在拍卖到800了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:06</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我觉得这样拍挺好，但有一个更好的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:06</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">1k</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:07</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">让BLOGGER拿出一个自己的东西，大家拍</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:07</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">然后把钱捐了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:07</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">比如未完成的牙刷，等，之类</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:07</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">这个今年也会有吧，拍卖签名的T恤</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:07</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">我倒，要拍也是keso的才会有人要，呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">不能只在T恤里转</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">你的，我一定要</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">k粉多啊</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">你可以找我当托</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">咱把你的牙刷炒得超过K的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我只要10%佣金</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:09</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">好，下次咱就拍这个</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:10</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">明天BLOG界就流传“在2006网志大会拍卖环节，未完成的牙刷黑马，高出KESO T恤 2000元 被网友拍下”</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">下一个主题是什么？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">douban的？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">yes</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">偶像</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">豆瓣的杨勃</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">我是python程序员！！！</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:11</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">好久没见到yangbo了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:12</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">欢呼～～～</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:12</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">题目: Blog 和微内容</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:12</td>
+				
+				
+				<td class="nick">kernel1983:</td>
+				<td class="line">我想和他照相～～～</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:13</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">估计现场的豆粉数量可以和K粉有一拼</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">blog的两重含义</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">一. 个人空间</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">二. 文字内容</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:19</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">狡兔三窟, One Identity, Many Places</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:20</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">网上空间, 从私密的私人空间, 到公开的公共空间</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:22</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">»¹ÊÇMIRCºÃÓÃ</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:23</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">¹Ù·½ÍÆ¼öµÄxchatÄÑÓÃËÀÁË</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:23</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">ÆµµÀÀï¾ÍÕâÃ´Ð©ÈË°¡</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:23</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">ÇëÎÊ£¬ÄÄÀï¿ÉÒÔ¿´µ½ÊÓÆµÖ±²¥£¿</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">leon, please use UTF-8, or else nobody can read your words</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:24</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">sorry</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">因为网络条件的限制, 没有办法进行视频直播</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">还是可以看见的，对吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">哦</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:26</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">可以稍等一些时间, 稍后会有bloggers上传视频</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:27</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">(可能要等他们回到家 :P)</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:27</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">噢，昨天的视频有吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:27</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">上传到哪里？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:27</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我昨天在seehaha上没有找到</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:27</td>
+				
+				
+				<td class="nick">collinyang:</td>
+				<td class="line">是啊 这次给人的感觉就是乱</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:31</td>
+				
+				
+				<td class="nick">chatcn:</td>
+				<td class="line">The vidio is now playing an foreigner~s speaking,right?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:39</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">5,在吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:40</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">今天怎么没有人文字直播了？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">抱歉，有些事情</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:45</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">刚才有事走开了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:46</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">douban 最近会退出blog推荐</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:46</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">推出</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:52</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">安猪: Blog和NPO</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:53</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">首先是 NPO 40" 电梯介绍</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">平民学校, 没有围墙的大学</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:55</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">根与芽</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:55</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">农家女</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">03:56</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line"><a href="http://www.cnbloggercon.org/2006/NPO">http://www.cnbloggercon.org/2006/NPO</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">03:56</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">OOPS</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:06</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">谁可以帮我查到 启明网络家园的 网址?</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:09</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Pass Love Project</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:13</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">木棉推荐福建的两个公益项目</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:13</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">1. 简单助学志愿社团 www.simlook.com</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">2. 福建大学生就业力训练计划</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.591up.com</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:15</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">试着做了一个年会各类内容的聚合页面</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:15</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line"><a href="http://vovo.net.cn/biz/html/c52/">http://vovo.net.cn/biz/html/c52/</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:15</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">誰知道一寧坐在哪兒呀？有人請我跟他打個招呼</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:16</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">可能陪他外甥女agoo去玩了 :P</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:16</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">:(</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:16</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">我的投影片該給誰呢？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:17</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">我的不是ppt，是openoffice.org的impress</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:17</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">可以轉pdf</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:17</td>
+				
+				
+				<td class="nick">Tangos_:</td>
+				<td class="line">pdf吧</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:19</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">OK, 我給兩個檔，有openoffice的人可以方便拿到原檔 :)</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:20</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">KJ-Wikia: 一宁 在到处跑, 也和那位朋友say hi</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:20</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">KJ-Wikia: ppt 请email给我, 稍后放到年会网站</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">04:21</td>
+				
+				
+				<td class="nick">KJ-Wikia:</td>
+				<td class="line">number5: 了解</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">04:26</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line"><a href="http://506871.bliao.com/">http://506871.bliao.com/</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">05:22</td>
+				
+				
+				<td class="nick">Neptune:</td>
+				<td class="line">hi all</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">05:23</td>
+				
+				
+				<td class="nick">Neptune:</td>
+				<td class="line">都吃饭去了？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">05:24</td>
+				
+				
+				<td class="nick">Caiwangqin:</td>
+				<td class="line">Hello</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">05:24</td>
+				
+				
+				<td class="nick">Caiwangqin:</td>
+				<td class="line">Hello</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">05:31</td>
+				
+				
+				<td class="nick">Neptune:</td>
+				<td class="line">：）</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:15</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">召唤文字直播,呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:19</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">现在是方兴东在讲: 从大教堂到集市</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:22</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Eric S R的From Cathedral  to Bazzar</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:22</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line"><a href="http://catb.org/esr/writings/cathedral-bazaar/cathedral-bazaar/index.html">http://catb.org/esr/writings/cathedral-bazaar/cathedral-bazaar/index.html</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Eric S Raymond</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">方: 传统模式和博客模式</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:23</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">大教堂 = 传统媒体</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">集市= 博客媒体</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">方: 博客中国的创业历程</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">个人网站阶段, 最快乐的时期</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">2002.8 ~ 2004.8</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:25</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">04年8月拿到天使投资</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:27</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">2005年9月到现在风险投资阶段</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:27</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">根据预计很快可以超过新浪</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:28</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">如果重新来过, 还是会选择风险投资这条路</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:30</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">三个月就希望全国闻名的心态会让国内的2.0公司浮出很多代价</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:30</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">^付出</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:31</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">2.0的中国命运</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:32</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">中国2.0环境和美国的差异(网民素质和成熟度)</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:33</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">速战论</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:33</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">失败论</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:33</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">最可能的2.0中国历程: 持久战</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:34</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">国内web2.0的办法</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:34</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">实名制</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:35</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">实名制争论说明了什么。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:37</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我们可能会被边缘化</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:38</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">ff又在滥用斯托曼的理念</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:38</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">草根的直下而上在推动</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:38</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">至下而上</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:39</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">介绍一下互联网实验室</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:39</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">核心方法来</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">1.无限的理想</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">2.有限的资源</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">3.核心的问题</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:41</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">谁还想请教</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">成为一个有争议的人物？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">还要抄开源软件的concept</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">下一个 谁还能此为类似的重点？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我的态度是批评木子美的。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我觉得他是一个符号性的人物。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">她</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">她还是我们的员工。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">芙蓉姐姐不是我们的员工</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">是麦田操作的。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我是在活的很久以后才知道</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:43</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">同意5号</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">问：但最初你是这样利用他们的。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">方，总免不了被这样。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:44</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">恶搞opensource吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">只要对博客推广有帮助，这样的机会我就要积极的利用。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:44</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">方博也是kuso一族呀</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:45</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">方：）</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:45</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">下面是老冒的时间了。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">易都市在自我介绍</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">Shizhao: :D</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">年底会有30个城市，</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">也支持blog</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">他的网址？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">有终</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:48</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">优种</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:48</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">刘平阳</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:48</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">夏衍</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:49</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">蔡望勤希望和其他的Ruby On Rails 开发者进行交流</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:49</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">mash</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:49</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">mashup</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:49</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.edushi.com 庞晓伟</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:50</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.uuzone.com 蔡望勤</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:50</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line"><a href="http://vovo.net.cn/biz/html/c52/">http://vovo.net.cn/biz/html/c52/</a>  算不算mash</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:50</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.kijiji.com.cn 王建硕 (www.wangjianshuo.com)</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:50</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">不一样</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:51</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.yupoo.com 刘平阳</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:51</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.feedsky.com herock夏炎</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:52</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">www.zhuaxia.com 徐易容</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:52</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">问：mashup 和抓虾的区别</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:52</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">答：可以把各种东西聚合</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:52</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">从中我们能产生进一步的价值</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:52</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">vovo是谁弄的？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:53</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">ooof</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:53</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">hehe</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:53</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">各种各样的原材料 被创造和再创造。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:53</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">shizhao，什么看法。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:54</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">现在是夏炎herock在介绍Feedsky</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:54</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">全部机器抓取的？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:54</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">是</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:54</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">rss</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:55</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">good</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:56</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">shizhao，还有什么适合的rss可以被放到里面吗?</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">06:59</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">.</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">06:59</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">.</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:00</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我所理解：把不同的资源统一到一起</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:01</td>
+				
+				
+				<td class="nick">Shizhao_:</td>
+				<td class="line">ping!</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:01</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">这些内容我们希望把他们统一起来。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:01</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">将自己的相册能够统一到地图里面</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:02</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">现在是谁在讲？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:02</td>
+				
+				
+				<td class="nick">Shizhao_:</td>
+				<td class="line">没有GPS怎么办？请回答</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:04</td>
+				
+				
+				<td class="nick">Shizhao_:</td>
+				<td class="line">类似flickr的geo tag吗？但是怎么找到该地精确的坐标？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:05</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">建嗦：更多的是一种可能性，去推出一种新的可能性</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:07</td>
+				
+				
+				<td class="nick">Shizhao_:</td>
+				<td class="line">这里没有形成和现场的良好互动</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:09</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">一定是有很多东西，才是mashup</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:09</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line"> 就是一大超市</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:12</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">做来</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:12</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">左拉</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:14</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">大侠问：mashup 和什么什么的区别</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:14</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">mashup最早来至音乐</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:15</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">&lt;ooof&gt; 大侠问：mashup 和什么什么的区别</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:15</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">&lt;ooof&gt; mashup最早来至音乐</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:16</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">通过api</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:16</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">&lt;ooof&gt; 大侠问：mashup 和什么什么的区别</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:16</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">&lt;ooof&gt; mashup最早来至音乐</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:16</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">通过api</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:16</td>
+				
+				
+				<td class="nick">Shizhao_____:</td>
+				<td class="line">shit!什么破网</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:17</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:17</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">是可恶</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:17</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">要开放自己的接口给外面用</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:17</td>
+				
+				
+				<td class="nick">Shizhao_____:</td>
+				<td class="line">短短时间，我都从shizhao变成了shizhao______</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:18</td>
+				
+				
+				<td class="nick">Shizhao_____:</td>
+				<td class="line">down了6次</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:18</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">看到那么多shizhao，呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">也是风景</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:20</td>
+				
+				
+				<td class="nick">Shizhao:</td>
+				<td class="line">cnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggerconcnbloggercon</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:20</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">isaac:我想问一下你们台上的嘉宾，你们是不是真的懂</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:21</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我刚才也下去了。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:21</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">必定是不同质的两种东西。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:21</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">mashup在中国互联网早就不是新鲜了, 很久之前就有人肉API</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:21</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">创造不同质的东西。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:22</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">不是所有的都需要，</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:22</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">各大网站通过编辑不停地copy &amp; paste他人(主要是blogger)的内容到自己的网站进行mashup</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:23</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">夏衍：比如我们现在，未来我们一定会希望被更多网站广泛使用。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:24</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">其实我觉得feedsky还是提供了api的, RSS就是最普遍应用的mashup (API)啊</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:24</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">mashup应该是有不同层次的吧？5</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:25</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">现在大约有几层？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:25</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line"><a href="http://www-128.ibm.com/developerworks/cn/xml/x-mashups.html">http://www-128.ibm.com/developerworks/cn/xml/x-mashups.html</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:25</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">Mashup 是一种令人兴奋的交互式 Web 应用程序，它利用了从外部数据源检索到的内容来创建全新的创新服务。它们具有第二代 Web 应用程序的特点，也称为 Web 2.0。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:26</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">谢谢大家</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:26</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">混合创新</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我觉得feedsky提供了api，不能认为就是mashup</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">如果提供接口就是mashup的话，那计算机基本上就全是mashup</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:28</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">内容与服务的聚合</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:30</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">刚才isaac问嘉宾的问题，他们怎么回答的？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:30</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">api是mahup的一种，但不是全部，可以这样理解吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:31</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我觉得api是mashup的组件</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:31</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">必要条件</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:31</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">没有听太懂，以后单独去问他们吧。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:32</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">其实门户网站只是信息的堆砌，而mashup是信息的融合</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:33</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">api是mashup的必要条件吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">当然</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">api是主动接口</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:33</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，我同意你这看法，但堆砌与融合这两个概念不是一个标准概念</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:34</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">额。标准概念是什么？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:34</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我们很难在堆砌与融合代到共同的标准</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:34</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:34</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我们很难在堆砌与融合二间中到共同的标准</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:35</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">堆砌  和 融合  应该是有差异</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:35</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这样说吧，sina的专题其实应该说不仅仅是堆砌</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:35</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">他有信息加工的动作</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:36</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但是这种加工是在信息之上的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:36</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">也就是说做了一些索引的事情</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:36</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我觉得只能这么说，任何的对外来信息或服务的整合都可以称为MASHUP，只是好坏不同而矣</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:37</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">而这个好坏衡量的标准，就是是否给用户带来一站式的便利</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:37</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但我认为mashup需要是把信息来源加以组合</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:37</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">其实简单也不一定就是不好的体验吧。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:37</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">OOOF，没有说简单不好，简单与复杂不是好与不好的标准</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:38</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">只能说能用简单的方式达到对用户的满意，那是个好的，高效率的方式</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:38</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">大多数用户的满意度是衡量标准</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:38</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">cnsns，你看见过什么好的mashup应用吗。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">如果同意这个观点，其实是不是MASHUP，或者什么是“真正的”的MASHUP真的无所谓</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">OOOF,我觉得VOVO挺好</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:40</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">保是VOVO的MASHUP源，实在不咋地</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:40</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">只是VOVO的MASHUP源，实在不咋地</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">呵呵，找不出更多的了。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:40</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">还有什么地方的可用。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:40</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">OOOF，我很想你能推荐一个你喜欢的MASHUP应用</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:41</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我最需要的东西。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:41</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">现成的就有啊</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:41</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">基于google earth的很多应用就是mashup啊</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:42</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">你知道，有没有办法，把tag一样的不同blog提供商提供的blog的rss找到。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:42</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">OOOF，你这个需求非常有意义</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:42</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但现在我没看到有特别好的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">还有一个问题是：TAG本身是个性化的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line"> Leon，是的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我插一句，这个是不是可以通过blog search来实现？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我说ooof的需求</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">但是，我找过几个blog服务商的tag，但不可以被rss。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:43</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">恩</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我听</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:44</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">呵呵，我少打一个字</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:44</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我是说～～～～</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">应该什么意思</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:44</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">blog search可以输出rss吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:45</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">现在应该还不行吧</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:45</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但是我相信是可以做到的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:45</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">BLOG SEARCH的RSS输出，技术不是问题</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:45</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">一种做法是blog search供应商提供</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:46</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">有吗，我的技术能力只适合用已经做好的。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:46</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">或者是第三方提供这样的服务</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:46</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">去年以前就有人做到了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:46</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">我还一个问题：有吗？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:46</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">在什么对方？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">现在我这里浏览器一点也不能使用。：（</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:47</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">你问一个TANGOS，他应该非常清楚</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:47</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">好。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:47</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line"><a href="http://in.comengo.net/archives/blog-searchengine-comparision/">http://in.comengo.net/archives/blog-searchengine-comparision/</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:48</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">另外，vovo支持新闻小偷，可以抄不支持rss的一般的新闻网站。</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:48</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">YAHOO和GOOGLE都有BLOGSEARCH</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:48</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:48</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:48</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">什么问题？ 我刚才不在</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:49</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">支持rss输出的blog的tag的搜索。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:49</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line"><a href="http://blogsearch.google.com/">http://blogsearch.google.com</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:49</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">支持搜索结果RSS输入</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:49</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">太好了，</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:49</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但TAG方面好象还要摸</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:50</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">要tag方面的blog搜索的rss输出？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:50</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">那好像只有technorati才有</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:51</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">能搜tag的就没几个</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:51</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">关键是需要这样一个网站，可以定制自己需要的rss</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:51</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">看这个：<a href="http://blogsearch.google.com/blogsearch?hl=en&amp;num=10&amp;c2coff=1&amp;lr=&amp;safe=off&amp;ie=UTF-8&amp;q=cnbloggercon">http://blogsearch.google.com/blogsearch?hl=en&amp;num=10&amp;c2coff=1&amp;lr=&amp;safe=off&amp;ie=UTF-8&amp;q=cnbloggercon</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:51</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，GOOGLE基本上是可以这样的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:52</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line"><a href="http://blogs.icerocket.com/search?q=tag%3Acnbloggercon">http://blogs.icerocket.com/search?q=tag%3Acnbloggercon</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:52</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这样的话，再提供api，然后就是mashup。。。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:53</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但tangos,icerocket 对中文的搜索数据不多</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:53</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">要搜tag的话就没办法了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:55</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，其实MASHUP的概念还可以再细</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:55</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我可能要举个例子</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:55</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">洗眼恭视。。。</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">比如要整合cnbloggercon的内容</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我可能会找如下的信息源：</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">1.各BLOGSEARCH</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">2.各网摘站</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:56</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:57</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">2.各网摘站的TAG或全文搜索</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:57</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">3.大的图片站的TAG</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:57</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">4.百度的新闻搜索RSS</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">5.通过以上的数据采集后，可能要分析出所有内容中最多出现的关键词20个</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">6.然后就这20个词，走回刚才的1－4步</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">到此结束，这样给用户提供的信息量是最完全的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">表达结束</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这样非常复杂</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">如果有这样2个网站</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">一个是搜索引擎</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">1－3不复杂</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">恩</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">07:59</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">一个是RSS生成引擎</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">4步，可以人工，没必要想到机器</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我说错了，不是说复杂</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">是说辛苦</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">6回1－4,也可以用机器</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">辛苦就在第5步</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">如果这个搜索引擎非常牛，可以搜索到你的1-4</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:00</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">所有的信息</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:01</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">只要聚合，不用搜索</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:01</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">再辅佐RSS生成引擎就ok了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:01</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">恩</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">1－4时，你只要确定关键语为：中文网志年会以及CNBLOGGERCON</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">搜索引擎搜索出来的结果虽然格式有点难看</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但是也可以认为是聚合</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">恩</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">1－4时，你只要确定关键语为：中文网志年会以及CNBLOGGERCON,就以这个为起点，就可以了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:02</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">走到5时，就看你的技术能力和人工能力了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我知道，但是人工来做还是个非常辛苦的事情</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">如果5定为20个关键词，那工作不难</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">不用太多</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">现在台上讲话的是: wealink的潘剑锋</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">Tangos:</td>
+				<td class="line">现在到哪个主题了？还是mashup？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">额，这个网站我喜欢:D</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:03</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">上次领了一个mp3</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:04</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">有时候我们总想让机器做，其实人就可以办的，不必太着意机器</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:04</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但是效率啊</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:04</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">还讨论MASHUP不？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:04</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">现在是Isaac的主题: startups 和VC</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:04</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">噢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:05</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">你这么想，做一个人工智能分析的一套系统效率高，还是一个人一个小时筛出关键词效率高</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:05</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">isaac: 我的投资blog改名为 we make art not money</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:06</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">单一事件，当然是后者高</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:07</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">但是我说的这两个东东，好的搜索引擎和好的rss生成引擎都是可以做很多事情的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:07</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">其实不用智能分析</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:08</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">是，同意你的说法</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:12</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">B.V. Captial 的 薛盈: 主要看三个方面 产品, 市场, 用户</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:13</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">xuer: 不求最好, 但求最爱</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">xuer: web2.0 个人的web, 用户的web</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:14</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">xuer: web1.0 完全商业导向, 只能读</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:15</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">说得一般</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:16</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:16</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我觉得xuer不太善于表达一些理念的东西</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:16</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">去年的cnbloggercon也是</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:17</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">所有想找到本质的心理，必然会有这样或那样的漏洞</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:17</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">其实我们只能去找到相似性</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:18</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">xuer说的这几句话也太一般了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:18</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">特别是同样或类信环境下的相似性，而不可能找到所有环境下的绝对性</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:18</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">有没有其它的观点了？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:18</td>
+				
+				
+				<td class="nick">number5:</td>
+				<td class="line">因为场地租用时间的限制, 年会现在正式结束</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:18</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哦</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">额，今天结束的很早啊</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">挺好的，至少让我们在这里聊天</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">是的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">不知道以后这个频道会不会一直开着</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">事件诱导，这是SN的常用方式</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">如果没有事件，这个频道是没有存在的基础的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:19</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:20</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">是吧</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:20</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">不过cnbloggercon应该已经可以称为是一个品牌了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:20</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">作为品牌就有存在的基础了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:20</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">希望如此</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:20</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但也存在着一定的问题</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">CNBLOGGERCON去年和今年是一个自然品牌</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">其实应该有一个半官方的组织</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">以后要有更大的品牌发挥，至少应该有一个秘书处</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">对的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但这就涉及投入</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">1.投入的资 金</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">2.投入的角色</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:21</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">有个组织的话，就可以除了会议以外再搞点其它的活动了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:22</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">两点上后一点更为敏感</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:22</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">资金嘛，2个来源</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:22</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">首先是会员交费</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:22</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">可以在每年的cnbloggercon的时候适当多收一点</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:22</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">那后一点呢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:23</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">其次那些资助的企业可以作为顾问单位嘛</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:23</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">什么投入的角色？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:23</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">其实就是由谁来“主控”这个品牌</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:23</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">那怕是民主集中式的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:24</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我觉得还是自由式发展为好</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:24</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">绝大部分的blogger都不介意别人来主控这个品牌的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:24</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，错了，会介意的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">比如方兴东来主控</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">会咋样</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">比如刘韧主控</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这些人都不行</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">比如周鸿一主控</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我觉得isaac和zheng可以</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:25</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">所以说，你还是有介意的地方</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">额，我收回我说的话</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">其实我说的意思是</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我认为cnbloggercon是cnblog发起的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:26</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">因此应该属于cnblog</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:27</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">如果这样定位，那在广纳BLOOGER方面，还需要大量的工作</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">不聊这个，有点八卦了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">cnsns你的blog地址给我一个吧</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">您是哪里的朋友，应该在淮河以南吧</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">或者留个msn</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我在上海</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:28</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">您呢？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:29</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我？我有一个冒充的BLOG：<a href="http://www.banerzhuan.com/user/cnsns">http://www.banerzhuan.com/user/cnsns</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:29</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我在北京</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:29</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">噢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:29</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">您的BLOG呢</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:29</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我的blog是<a href="http://www.antsight.com/liyi/">http://www.antsight.com/liyi/</a></td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:30</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">谢谢</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:30</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">:)</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:31</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">banerzhuan我好像也注册过的:$</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">您写了很久时间的BLOG</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哦，注不注都无的谓</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我比较懒</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我就不太喜欢BLOG</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:32</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">最早差不多03年年底就关注了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">错了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">是02年年底</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">是</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">后来03年我们自己搞了个服务器</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我喜欢掐架，不喜欢一个人写</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我就在这上面写了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">是嘛，比方兴东还早</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:33</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">呵呵，我也喜欢，不过我比较懒</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:34</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">到今天一共也就写201篇</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:34</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">而且有不少是转贴的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:34</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">自己乐就成</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:34</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">去年本来我可能去的上海参加会的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">原来我也是转贴</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">基本上我保证每个月至少一篇</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">偶尔才自己写一点</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">额，</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:35</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">后来有了网摘，就全部自己写</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">去年时我还是个BLOGGER</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">CALON，你贡献一下你的BLOG啊</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line"><a href="http://calon.weblogs.us/">http://calon.weblogs.us/</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哦，昨天看过</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">是啊</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:36</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">印象派</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:37</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">您在哪里</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:37</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">在长沙，现在在邵阳出差</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:38</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我去过长沙4次</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:38</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">呵</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:38</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">每次年会就有事情忙…</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:38</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">您参与筹办？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">是不能参加啊…</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">哦</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">今年组织的不太好</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">关键是没有视频直播</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">可能临时换地吧</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:39</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">网络条件就不好了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:40</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">噢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:40</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">但我看出一些端倪</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:40</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">大部分人只要见个面就行了吧:)</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:40</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">BLOGCN在杭州，为什么他们没有大力协助</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:41</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">如果BLOGCN大力协助，可能效果会改善一些</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:41</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">现在cnbloggercon的草根性还是太强了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:42</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">那些大的bsp都不参加</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:42</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我觉得keso应该是以个人身份参加的吧</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:42</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">fxd应该也是吧</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:42</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">bsp不出面也不错</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:42</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:43</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">KESO是个人身分</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:43</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">不是不出面，其实有一些场地方面的事，当地的公司办好得多</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:43</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我一直觉得blog在中国是2个概念</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:43</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">bsp的概念和blogger的概念是不一样的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:44</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">这不影响现实中的筹备工作啊</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:45</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">这里人越一少了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:45</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">呵</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:45</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">问题是如果某个bsp协助的话，很有可能会造成这样的印象，年会倾向于某个bsp</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:45</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这次牛博网有没有人过来？</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:46</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">Leon，不会的</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:47</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，你<a href="http://del.icio.us/register">http://del.icio.us/register</a> 上得去嘛</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:47</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我咋上不去呢</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:47</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">我看一下</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:48</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">https</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:48</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line"><a href="https://secure.del.icio.us/register?noredir">https://secure.del.icio.us/register?noredir</a></td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:49</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">如果这样的年会上老徐、老罗、王三表他们能出现，这个年会会更有意义一点</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:50</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">你说到这个会的点子上了</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:51</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">其实这次会更向互联网界网志年会</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:51</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">是的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:51</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">所以keso会出现，老徐可能都不知道</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:52</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">LEON，看这个<a href="http://diggdot.us/">http://diggdot.us/</a>   也算是个MASHUP</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:52</td>
+				
+				
+				<td class="nick">calon:</td>
+				<td class="line">有没有统计过参加年会的职业分部？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:53</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">估计有数据，好统计，没人做分析</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:53</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">这个站点不错</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:54</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">我觉得这是个非常好的MASHUP的例子</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:55</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">嗯</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">08:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">MASHUP的某一个重要点是：通过整合，让用户方便且一站式完成需求</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">08:58</td>
+				
+				
+				<td class="nick">cnsns:</td>
+				<td class="line">其实我不在意叫不叫MASHUP</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">09:02</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">mashup需要有语义学的支持的</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">09:07</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">先下了</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">09:07</td>
+				
+				
+				<td class="nick">Leon:</td>
+				<td class="line">再见各位</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">14:46</td>
+				
+				
+				<td class="nick">digglove:</td>
+				<td class="line">大家好</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">14:46</td>
+				
+				
+				<td class="nick">digglove:</td>
+				<td class="line">anybody here?</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">14:47</td>
+				
+				
+				<td class="nick">digglove:</td>
+				<td class="line">国内做DIGG的有什么好的嘛？</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">15:07</td>
+				
+				
+				<td class="nick">keso:</td>
+				<td class="line">中国的DIGG的路还长，<a href="http://www.banerzhuan.com/">http://www.banerzhuan.com</a> 还可以看看</td>
+				
+			</tr>
+			
+			
+			<tr class="odd">
+				<td class="time">16:58</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">呵呵</td>
+				
+			</tr>
+			
+			
+			<tr class="even">
+				<td class="time">16:58</td>
+				
+				
+				<td class="nick">ooof:</td>
+				<td class="line">还有一些人啊。</td>
+				
+			</tr>
+			
+		</tbody></table>
+		
+		
+	</div>
+	
+</div>
+  
+
+
+    <p align="center"><img src="img2/tg_under_the_hood.png" alt="TurboGears under the hood" width="300" height="75"></p>
+	<script src="file:///C|/Documents%20and%20Settings/liuyong/&#26700;&#38754;/29_files/urchin.js" type="text/javascript">
+	</script>
+</body></html>
